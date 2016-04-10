@@ -371,23 +371,24 @@ function file_entity_field_formatter_view($entity_type, $entity, $field, $instan
             return $element;
           }
 
-          $file = file_load($item['fid']);
-          if (isset($item['display'])) {
-            $file->display = $item['display'];
-          }
-          if (isset($item['description'])) {
-            $file->description = $item['description'];
-          }
+          if ($file = file_load($item['fid'])) {
+            if (isset($item['display'])) {
+              $file->display = $item['display'];
+            }
+            if (isset($item['description'])) {
+              $file->description = $item['description'];
+            }
 
-          // Add some references to the referencing entity.
-          // @see https://www.drupal.org/node/2333107
-          $file->referencing_entity = $entity;
-          $file->referencing_entity_type = $entity_type;
-          $file->referencing_field = $field['field_name'];
+            // Add some references to the referencing entity.
+            // @see https://www.drupal.org/node/2333107
+            $file->referencing_entity = $entity;
+            $file->referencing_entity_type = $entity_type;
+            $file->referencing_field = $field['field_name'];
 
-          // Untranslatable fields are rendered with no language code, fall back
-          // to the content language in that case.
-          $element[$delta] = file_view($file, $settings['file_view_mode'], $langcode !== LANGUAGE_NONE ? $langcode : NULL);
+            // Untranslatable fields are rendered with no language code, fall back
+            // to the content language in that case.
+            $element[$delta] = file_view($file, $settings['file_view_mode'], $langcode !== LANGUAGE_NONE ? $langcode : NULL);
+          }
         } else {
           watchdog(
             'file_entity',
